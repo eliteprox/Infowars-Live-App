@@ -194,13 +194,7 @@ sub parseLeaf(job as object)
           contentNode.sdposterurl = element@sdImg
           for each child in element.getchildElements()
             if child.getname() = "title"
-
-            'This is to truncate the content titles
-            if (len(child.getText()) > 47) then
-                contentNode.title = Left(child.getText(), 47) + "..."
-            else 
                 contentNode.title = child.getText()
-            end if
               contentNode.addFields({"fulltitle": child.getText()})
             else if child.getname() = "contentId"
               contentnode.episodeNumber = child.gettext()

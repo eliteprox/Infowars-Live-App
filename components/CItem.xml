@@ -5,7 +5,7 @@
 
   <children>
       <Poster id="poster" />
-      <Label  id="label"    font="font:SmallBoldSystemFont" text="" wrap="true" horizAlign="left" />
+      <Label  id="label"    font="font:SmallBoldSystemFont" text="" wrap="true" height="100" horizAlign="left" />
       <!--
       <Label  id="description" font="font:SmallBoldSystemFont"  text="PLACEHOLDER" />
       <Label  id="sublabel" font="font:SmallBoldSystemFont"  text="PLACEHOLDER" /> -->
