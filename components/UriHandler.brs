@@ -194,18 +194,20 @@ sub parseLeaf(job as object)
           contentNode.sdposterurl = element@sdImg
           for each child in element.getchildElements()
             if child.getname() = "title"
-            
+
             'This is to truncate the content titles
             if (len(child.getText()) > 47) then
                 contentNode.title = Left(child.getText(), 47) + "..."
             else 
                 contentNode.title = child.getText()
-            end if              
+            end if
               contentNode.addFields({"fulltitle": child.getText()})
             else if child.getname() = "contentId"
               contentnode.episodeNumber = child.gettext()
             else if child.getname() = "contentType"
               contentNode.addFields({"contentType": child.getText()})
+            else if child.getname() = "streamFormat"
+              contentNode.addFields({"streamFormat": child.getText()})         
             else if child.getname() = "genres"
               contentnode.categories = child.getText()
             else if child.getname() = "media"
@@ -217,8 +219,6 @@ sub parseLeaf(job as object)
                   contentNode.maxBandWidth = item.gettext().toint()
                 else if item.getname() = "streamUrl"
                   contentNode.url = item.gettext()
-                else if item.getname() = "streamFormat"
-                  contentnode.streamFormat = item.gettext()
                 else
                   print "WHY AM I HERE: " ; item.getName() ; item.getText()
                 end if

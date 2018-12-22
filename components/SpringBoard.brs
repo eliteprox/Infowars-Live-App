@@ -29,25 +29,12 @@ Sub OnVideoPlayerStateChange()
   print "DetailsScreen.brs - [OnVideoPlayerStateChange]"
   
   ' error handling
-  'if m.Video.state = "error"
-    'error handling
-    'm.StreamStatus = "error"
-    'print "video error: " + m.Video.errorMsg
-    'print "video error: " + Str(m.Video.errorCode)
-  if m.Video.state = "playing"
-    'm.CurrentContent = m.Video.content.url    
+  if m.Video.state = "error" then
+    
+  else if m.Video.state = "playing" then
     print "video playing"
-    'm.StreamStatus = "playing"
-    ' playback handling
   else if m.Video.state = "finished"
-    print "finished video"
-    'm.Video.unobserveField("state")
-    'StopVideo()
-    'm.Video.observeField("state", "OnVideoPlayerStateChange")
-    'date = CreateObject("roDateTime")
-    'print "video finished"
-    'm.Video.observeField("state", "OnVideoPlayerStateChange")
-    'm.Video.unobserveField("state")    
+    print "finished video" 
     m.Video.control = "stop"
     m.Video.visible = false
     m.SpringDetails.visible = true
@@ -77,8 +64,8 @@ sub onContentChange(event as object)
   m.CategoryLabel.text = content.categories
 
   ContentNode = CreateObject("roSGNode", "ContentNode")
-  print "stream format:"  content.streamformat
-  ContentNode.streamFormat = content.streamformat
+  print "stream format:"  content.streamFormat
+  ContentNode.streamFormat = content.streamFormat
   contentNode.addFields({"contentType": content.contentType })
   ContentNode.url = content.url
   ContentNode.Title = content.fulltitle
@@ -105,10 +92,22 @@ sub onContentChange(event as object)
               ContentNode.Live = true
             end if
         else if (input.mediaType = "series") then
-            if m.top.seekposition <> invalid then m.Video.seek = m.top.seekposition
+            print "playing as series"
+            if m.global.registryTask.result.toFloat() > 0 then
+                m.Video.content = ContentNode
+                'print "setting video position to " + m.global.registryTask.result.toStr()
+                m.Video.seek = m.global.registryTask.result.toFloat()
+            else
+                m.Video.content = ContentNode
+            end if
+            PlayVideo()
+            m.Video.setFocus(true)
+            CleanDeepLink()
+            return
         end if
         m.Video.content = ContentNode
         PlayVideo()
+        m.Video.setFocus(true)
     else
         if content.contentType = "live" then
             ContentNode.PlayStart = "999999999"
@@ -118,14 +117,10 @@ sub onContentChange(event as object)
         end if
         m.Video.content = ContentNode
         PlayVideo()
+        m.Video.setFocus(true)
     end if
         
-    'Clean up the deep linking vars
-    input.contentid = invalid
-    input.mediaType = invalid
-    input = invalid
-    m.global.removeField("input")
-    m.global.addFields({ input: input })
+    CleanDeepLink()
   else
     if content.contentType = "live" then
         ContentNode.PlayStart = "999999999"
@@ -135,11 +130,22 @@ sub onContentChange(event as object)
     end if
 end sub
 
+sub CleanDeepLink()
+    input = m.global.input
+    'Clean up the deep linking vars
+    input.contentid = invalid
+    input.mediaType = invalid
+    input = invalid
+    m.global.removeField("input")
+    m.global.addFields({ input: input })
+end sub
+
 'When Play from Start or Resume are selected.
 sub onItemSelected(event as object)
     print "onItemSelected"
     if event.getData() <> 0 then m.Video.seek = m.top.seekposition
     PlayVideo()
+    m.Video.setFocus(true)
 end sub
 
 Function PlayVideo()
@@ -149,9 +155,10 @@ Function PlayVideo()
   m.Video.control = "play"
   m.SpringDetails.visible = false
   m.LabelList.setFocus(false)
+  m.SpringDetails.setFocus(false)
   m.Video.visible = true
-  m.Video.observeField("state", "OnVideoPlayerStateChange")
   m.Video.setFocus(true)
+  m.Video.observeField("state", "OnVideoPlayerStateChange")
 End Function
 
 ' Called when a key on the remote is pressed

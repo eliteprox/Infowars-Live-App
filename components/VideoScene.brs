@@ -51,20 +51,22 @@ sub onRowItemSelected(event as object)
 end sub
 
 sub onReadFinished(event as object)
-  print "onReadFinished"  
+  print "onReadFinished"
   
-  input = m.global.input
-  if input <> invalid then
-    if input.contentID <> invalid and input.mediaType <> invalid then 
+  'TODO: THIS IS WHERE THE AUTOMATION FOR SERIES COUDL WORK, OR THIS IS WHERE YOU WILL FIND CODE ON HOW TO MAKE IT WORK!!!
+  'input = m.global.input
+  'if input <> invalid then
+  '  if input.contentID <> invalid and input.mediaType <> invalid then 
 
-    end if
-    end if
+  '  end if
+  'end if
   
-  position = m.registryTask.result.toFloat()
+  position = m.registryTask.result.toFloat() 'todo: THIS IS IT!
   if position > 0
     m.Springboard.seekPosition = position
     minutes = position \ 60
     seconds = position MOD 60
+    m.top.seekposition = position
     if m.SpringList.content.getChildCount() > 1 then m.SpringList.content.removeChildIndex(1)
     contentNode = createObject("roSGNode","ContentNode")
     contentNode.title = "Resume Video (" + minutes.toStr() + " min " + seconds.toStr() + " sec)"
@@ -72,8 +74,14 @@ sub onReadFinished(event as object)
   else
     if m.SpringList.content.getChildCount() > 1 then m.SpringList.content.removeChildIndex(1)
   end if
+  
+  input = m.global.input
+  if input <> invalid then
+    if input.contentID <> invalid and input.mediaType <> invalid then 
+
+    end if
+  end if
     
-  m.CScreen.visible = false
   m.SpringBoard.visible = true
   m.SpringBoard.content = m.node
   m.SpringList.setFocus(true)
@@ -82,9 +90,7 @@ end sub
 sub onCategoryItemSelected()
   print "onCategoryItemSelected"
   m.array = m.CScreen.rowItemSelected
-  m.node = m.CRow.content.getchild(m.array[0]).getchild(m.array[1])  
-  
-  'print m.node.episodenumber
+  m.node = m.CRow.content.getchild(m.array[0]).getchild(m.array[1])
   m.registryTask.read = m.node.episodenumber
   m.CScreen.visible = false
 end sub
@@ -204,9 +210,8 @@ sub LoadDeepLink()
                         input = invalid
                         m.global.removeField("input")
                         m.global.addFields({ input: input })
-                        m.CRow.setFocus(true)
                         m.CRow.jumpToRowItem = [a,i]
-                        eachContentNode.setFocus(true)
+                        print "jumping to item"
                         return
                     end if
                     
@@ -224,7 +229,7 @@ sub LoadDeepLink()
         if Found = True then        
             m.Array = [index1, index2]
             m.registryTask.read = input.contentID
-            'm.CScreen.visible = false
+            m.CScreen.visible = false
             'm.SpringBoard.visible = true
         else
             DeepLinkingBreak(input, "caught deep link error - leaf level")

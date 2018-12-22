@@ -16,9 +16,12 @@
       showRowCounter="[true]"
       showRowLabel="[true]"
       showRowCounterForShortRows="false"
-      translation="[125,200]" />
-  </children>
+      translation="[125,200]"
+       />
+      
 
+      
+  </children>
   <interface>
     <field id="RowItemSelected" type="intarray" alias="CategoryRow.rowItemSelected"/>
   </interface>
