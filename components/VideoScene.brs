@@ -52,16 +52,7 @@ end sub
 
 sub onReadFinished(event as object)
   print "onReadFinished"
-  
-  'TODO: THIS IS WHERE THE AUTOMATION FOR SERIES COUDL WORK, OR THIS IS WHERE YOU WILL FIND CODE ON HOW TO MAKE IT WORK!!!
-  'input = m.global.input
-  'if input <> invalid then
-  '  if input.contentID <> invalid and input.mediaType <> invalid then 
-
-  '  end if
-  'end if
-  
-  position = m.registryTask.result.toFloat() 'todo: THIS IS IT!
+  position = m.registryTask.result.toFloat()
   if position > 0
     m.Springboard.seekPosition = position
     minutes = position \ 60
@@ -73,13 +64,6 @@ sub onReadFinished(event as object)
     m.SpringList.content.appendChild(contentNode)
   else
     if m.SpringList.content.getChildCount() > 1 then m.SpringList.content.removeChildIndex(1)
-  end if
-  
-  input = m.global.input
-  if input <> invalid then
-    if input.contentID <> invalid and input.mediaType <> invalid then 
-
-    end if
   end if
     
   m.SpringBoard.visible = true
@@ -230,7 +214,6 @@ sub LoadDeepLink()
             m.Array = [index1, index2]
             m.registryTask.read = input.contentID
             m.CScreen.visible = false
-            'm.SpringBoard.visible = true
         else
             DeepLinkingBreak(input, "caught deep link error - leaf level")
             return
@@ -244,7 +227,6 @@ sub onCategoryContentSet(event as object)
   m.HomeScreen.visible = false
   m.CScreen.visible = true
   m.CRow.setFocus(true)
-  'm.UriHandler.contentSet = false
 end sub
 
 sub makeRequest(headers as object, url as String, method as String, num as Integer, title as String)

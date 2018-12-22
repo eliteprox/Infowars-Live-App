@@ -17,12 +17,6 @@ sub init()
   m.Title.color = "#333333"
   m.Details.color = "#444444"
   m.RuntimeLabel.color = "#333333"
-  
-  m.CurrentContent = invalid 
-  m.ErrorCount = 0
-  m.ErrorInterval = 0
-  m.LastError = invalid
-  
 end sub
 
 Sub OnVideoPlayerStateChange()
@@ -206,10 +200,3 @@ function onKeyEvent(key as String, press as Boolean) as Boolean
   end if
   return false
 end function
-
-function StopVideo()
-
-end function
-
-
-

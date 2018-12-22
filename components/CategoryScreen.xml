@@ -19,8 +19,6 @@
       translation="[125,200]"
        />
       
-
-      
   </children>
   <interface>
     <field id="RowItemSelected" type="intarray" alias="CategoryRow.rowItemSelected"/>
