@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2016 Roku Corp.  All Rights Reserved. -->
+
+<component name="VideoScene" extends="Scene" xsi:noNamespaceSchemaLocation="https://devtools.web.roku.com/schema/RokuSceneGraph.xsd">
+  <children>
+    <RegistryTask id="RegistryTask"/>
+    <Rectangle
+      color="#DFDFDF"
+      width="1920"
+      height="1080"
+      opacity=".6"
+      translation="[0,0]" />
+
+    <Overhang
+      showClock="true"
+      clockColor="0xffffff"
+      logoUri="pkg:/images/logo.png"
+      backgroundUri="pkg:/images/backing.png"
+      logoBaselineOffset="45" />
+
+    <HomeScreen
+      id="HomeScreen"
+      visible="false"/>
+
+    <CategoryScreen
+      id="CategoryScreen"
+      visible="false"/>
+      
+    <SpringBoard
+      id="SpringBoard"
+      visible="false"/>
+
+    <Dialog
+      id="Warning"
+      title="Invalid Deep Link"
+      message="An invalid deep link was provided, press OK to be returned to the category menu."
+      visible="false" />
+  </children>
+
+
+  <interface>
+    <field id="homeRowItemSelected" type="intarray" alias="HomeScreen.rowItemSelected" onChange="onRowItemSelected"/>
+    <field id="cateRowItemSelected" type="intarray" alias="CategoryScreen.rowItemSelected" onChange="onCategoryItemSelected"/>
+    <field id="category" type="string" />
+  </interface>
+
+  <script type="text/brightscript" uri="pkg:/components/SGHelperFunctions.brs"/>
+  <script type="text/brightscript" uri="pkg:/components/VideoScene.brs"/>
+</component>

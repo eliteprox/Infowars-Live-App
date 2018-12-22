@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2016 Roku Corp.  All Rights Reserved. -->
+<component name="SpringBoard" extends="Group">
+  <children>
+    <Group id="SpringBoardDetails">
+      <Label id="Title" font="font:MediumBoldSystemFont" translation="[650, 250]" wrap="true" width="1170" height="100" />
+
+      <LabelList
+        id="LabelList"
+        vertFocusAnimationStyle="fixedFocusWrap"
+        translation="[686,365]"
+        itemSize="[600,48]"
+        color="#222222"
+        focusedColor="#222222">
+        <ContentNode id="Labels" role="content">
+          <ContentNode id="MainButton" title="Play from start"/>
+        </ContentNode>
+      </LabelList>
+
+      <Rectangle
+        color="#111111"
+        width="500"
+        height="300"
+        translation="[100,240]"
+        opacity=".9" />
+
+      <Poster
+        id="Image"
+        width="490"
+        height="290"
+        translation="[104,245]"/>
+
+      <Label
+        id="CategoryLabel"
+        font="font:LargeBoldSystemFont"
+        translation="[100, 600]" />
+
+      <Label
+        id="Details"
+        width="1720"
+        font="font:MediumBoldSystemFont"
+        text=""
+        wrap="true"
+        translation="[100,675]" />
+
+      <Label
+        id="RuntimeLabel"
+        text="Video Length:"
+        font="font:LargeBoldSystemFont"
+        translation="[300,875]" />
+    </Group>
+    <Video
+      id="Video"
+      width="1920"
+      height="1080"
+      translation="[0,0]"
+      visible="false"
+      enableTrickPlay="true"
+      enableUI="true"
+      />
+  </children>
+
+  <interface>
+    <field id="content" type="node" onChange="onContentChange"/>
+    <field id="seekPosition" type="float"/>
+    <field id="itemSelected" type="integer" alias="LabelList.itemSelected" onChange="onItemSelected"/>
+  </interface>
+
+  <script type="text/brightscript" uri="pkg:/components/generalUtils.brs"/>
+  <script type="text/brightscript" uri="pkg:/components/SpringBoard.brs"/>
+</component>

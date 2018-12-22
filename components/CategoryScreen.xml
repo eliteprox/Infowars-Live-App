@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2016 Roku Corp.  All Rights Reserved. -->
+<component name="CategoryScreen" extends="Group">
+  <children>
+    <RowList
+      id="CategoryRow"
+      itemComponentName="CItem"
+      itemSize="[1700,500]"
+      rowHeights="[460]"
+      rowItemSize="[[500,300]]"
+      rowItemSpacing="[[100,20]]"
+      numRows="4"
+      rowLabelOffset="[[0,15]]"
+      rowLabelFont="font:LargeBoldSystemFont"
+      rowLabelColor="0x333333"
+      showRowCounter="[true]"
+      showRowLabel="[true]"
+      showRowCounterForShortRows="false"
+      translation="[125,200]" />
+  </children>
+
+  <interface>
+    <field id="RowItemSelected" type="intarray" alias="CategoryRow.rowItemSelected"/>
+  </interface>
+</component>
