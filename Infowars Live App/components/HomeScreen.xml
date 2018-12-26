@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2016 Roku Corp.  All Rights Reserved. -->
+<component name="HomeScreen" extends="Group">
+  <children>
+    <RowList
+      id="HomeRow"
+      itemComponentName="Item"
+      itemSize="[1920,400]"
+      rowHeights="[440]"
+      rowItemSize="[[500,300]]" 
+      rowItemSpacing="[[100,0]]"
+      rowLabelColor="0x333333"
+      numRows="2"
+      showRowCounter="[false]"
+      translation="[125,220]"/>
+  </children>
+
+  <interface>
+    <field id="RowItemSelected" type="intarray" alias="HomeRow.rowItemSelected"/>
+  </interface>
+
+  <script type="text/brightscript" uri="pkg:/components/HomeScreen.brs"/>
+</component>
