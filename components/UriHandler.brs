@@ -244,7 +244,6 @@ sub parseLeaf(job as object)
       if m.top.numCurrentRows = m.Leafs.Count() then
         m.Leafs = sorted(m.Leafs,"order")
         for each item in m.Leafs
-          print "adding row" + item.title
           if m.top.contentcache.hasfield(m.top.numRowsReceived.tostr()) then m.top.numRowsReceived++
           contentAA = {}
           contentAA[m.top.numRowsReceived.toStr()] = item
@@ -263,12 +262,10 @@ sub updateContent()
   print "UriHandler.brs - [updateContent]"
   if m.top.contentSet return
   if m.top.numRows - 1 = m.top.numRowsReceived
-    print "pass 1"
     parent = createObject("roSGNode", "ContentNode")
     for i = (m.top.numRows - m.top.numCurrentRows) to m.top.numRowsReceived
       parent.appendchild(m.top.contentCache.getField(i.toStr()))
     end for
-    print "All content has finished loading"
     m.top.contentSet = true
     m.top.categorycontent = parent
     m.top.deeplink = parent
@@ -294,7 +291,7 @@ sub parseResponse(job as object)
         print "begin category node parsing"
 
         categories = xml.GetChildElements()
-        print "number of categories: " + categories.Count().toStr()
+        'print "number of categories: " + categories.Count().toStr()
 
         '@ operator:
         'The @ operator can be used on an roXMLElement to return a named attribute.
@@ -329,7 +326,7 @@ sub parseResponse(job as object)
      
             categoryLeaves = category.getChildElements()
             for each leaf in categoryLeaves
-              print "leaf: " + leaf@title + " | " + leaf@description
+              'print "leaf: " + leaf@title + " | " + leaf@description
               sleep(100)
               subAA = {}
               subAA.title = leaf@title
