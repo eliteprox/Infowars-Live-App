@@ -26,6 +26,7 @@ Sub OnVideoPlayerStateChange()
   if m.Video.state = "error" then
     
   else if m.Video.state = "playing" then
+    m.Video.setFocus(true)
     print "video playing"
   else if m.Video.state = "finished"
     print "finished video" 
@@ -101,7 +102,6 @@ sub onContentChange(event as object)
         end if
         m.Video.content = ContentNode
         PlayVideo()
-        m.Video.setFocus(true)
     else
         if content.contentType = "live" then
             ContentNode.PlayStart = "999999999"
@@ -111,7 +111,6 @@ sub onContentChange(event as object)
         end if
         m.Video.content = ContentNode
         PlayVideo()
-        m.Video.setFocus(true)
     end if
         
     CleanDeepLink()
@@ -153,6 +152,7 @@ Function PlayVideo()
   m.Video.visible = true
   m.Video.setFocus(true)
   m.Video.observeField("state", "OnVideoPlayerStateChange")
+  m.Video.setFocus(true)
 End Function
 
 ' Called when a key on the remote is pressed
