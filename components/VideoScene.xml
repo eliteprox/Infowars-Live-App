@@ -12,7 +12,8 @@
       translation="[0,0]" />
 
     <Overhang
-      showClock="false"
+      id="OverhangHeader"
+      showClock="true"
       clockColor="0xffffff"
       logoUri="pkg:/images/logo.png"
       backgroundUri="pkg:/images/backing.png"
@@ -21,7 +22,7 @@
     <HomeScreen
       id="HomeScreen"
       visible="false"/>
- 
+
     <CategoryScreen
       id="CategoryScreen"
       visible="false"/>

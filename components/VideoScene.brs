@@ -11,7 +11,7 @@ sub init()
   m.HomeRow       = m.top.findNode("HomeRow")
   m.CScreen       = m.top.findNode("CategoryScreen")
   m.CRow          = m.top.findNode("CategoryRow")
-
+     
   AddAndSetFields(m.global,{RegistryTask: m.RegistryTask})
 
   'Variables for storing node selected and position

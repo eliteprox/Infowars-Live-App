@@ -12,6 +12,7 @@ sub init()
   m.MainButton    = m.top.findNode("MainButton")
   m.CategoryLabel = m.top.findNode("CategoryLabel")
   m.RuntimeLabel  = m.top.findNode("RuntimeLabel")
+  
   m.Title.font.size = 40
   m.CategoryLabel.color = "#333333"
   m.Title.color = "#333333"
@@ -68,8 +69,6 @@ sub onContentChange(event as object)
   ContentNode.ShortDescriptionLine1 = content.title
   ContentNode.SwitchingStrategy = "full-adaptation"
   ContentNode.IgnoreStreamErrors = true
-  'ContentNode.StarRating = 80
-  'ContentNode.Length = 1972
 
   if content.contentType = "live" then
     m.MainButton.title = "Watch Live"

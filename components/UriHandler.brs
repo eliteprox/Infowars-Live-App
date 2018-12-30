@@ -3,7 +3,7 @@
 sub init()
   print "UriHandler.brs - [init]"
   m.port = createObject("roMessagePort")
- 
+  
   ' fields for checking if content has been loaded
   m.top.count = 0
   m.top.numRows = 0
@@ -200,13 +200,13 @@ sub parseLeaf(job as object)
               contentnode.episodeNumber = child.gettext()
             else if child.getname() = "contentType"
               contentNode.addFields({"contentType": child.getText()})
-            else if child.getname() = "streamFormat"
-              contentNode.addFields({"streamFormat": child.getText()})         
             else if child.getname() = "genres"
               contentnode.categories = child.getText()
             else if child.getname() = "media"
               for each item in child.getchildElements()
-                if item.getname() = "streamQuality"
+                if item.getname() = "streamFormat"
+                  contentNode.addFields({"streamFormat": item.getText()})
+                else if item.getname() = "streamQuality"
                   contentnode.rating = item.gettext()
                 else if item.getname() = "streamBitrate"
                   contentNode.minBandwidth = "1000"
