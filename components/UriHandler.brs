@@ -8,6 +8,7 @@ sub init()
   m.top.count = 0
   m.top.numRows = 0
   m.top.numRowsReceived = 0
+  m.top.numRowsReceivedAlt = 0
   m.top.numBadRequests = 0
   m.top.contentSet = false
   ' Stores the content if not all requests are ready
@@ -20,7 +21,7 @@ sub init()
   ' setting the task thread function
   m.top.functionName = "go"
   m.top.control = "RUN"
-  
+  m.Leafs = CreateObject("roArray", 100, true)
 end sub
 
 'Task function
@@ -41,6 +42,7 @@ sub go()
       else if msg.getField()="encodeRequest"
         if encodeRequest(msg.getData()) <> true then print "Invalid request"
       else if msg.getField()="ContentCache"
+        print "finished"
         updateContent()
       else
         print "Error: unrecognized field '"; msg.getField() ; "'"
@@ -72,6 +74,7 @@ end function
 function addRequest(request as Object) as Boolean
   print "UriHandler.brs - [addRequest]"
   if type(request) = "roAssociativeArray"
+    'print request.context
     context = request.context
 	if type(context) = "roSGNode"
       parameters = context.parameters
@@ -134,6 +137,7 @@ sub processResponse(msg as Object)
   idKey = stri(msg.GetSourceIdentity()).trim()
   job = m.jobsById[idKey]
   if job <> invalid
+    'print job
     context = job.context
     parameters = context.context.parameters
     jobnum = job.context.context.num
@@ -154,6 +158,8 @@ sub processResponse(msg as Object)
       else if result.num = 0
         parseResponse(job)
       else if result.num = 1
+        'Try Collecting these, then sorting them.
+        'm.Leafs.Push(job)
         parseLeaf(job)
       end if
     else if msg.GetResponseCode() = 204 and result.num = -7
@@ -164,6 +170,7 @@ sub processResponse(msg as Object)
       if result.num > 0 and result.num < 3
         m.top.numBadRequests++
         m.top.numRowsReceived++
+        print "incrementing row recieved 1"
       else
         print "Error: status code was: " + (msg.GetResponseCode()).toStr()
       end if
@@ -180,13 +187,14 @@ sub parseLeaf(job as object)
   str = result.content
   num = result.num
   title = job.context.context.title
-
+  order = job.context.context.order
   xml = CreateObject("roXMLElement")
 
   if xml.parse(result.content)
     if xml.feed <> invalid
       row = CreateObject("roSGNode", "ContentNode")
       row.title = title
+      row.addFields({"order": order})
       for each element in xml.getChildElements()
         if element.getChildElements() <> invalid
           contentNode = CreateObject("roSGNode","ContentNode")
@@ -229,11 +237,46 @@ sub parseLeaf(job as object)
           row.appendChild(contentNode)
         end if
       end for
-      if m.top.contentcache.hasfield(m.top.numRowsReceived.tostr()) then m.top.numRowsReceived++
-      contentAA = {}
-      contentAA[m.top.numRowsReceived.toStr()] = row
-      m.top.contentCache.addFields(contentAA)
+      
+      'Collect the contentrows
+      m.Leafs.Push(row)
+      'You can check if done loading here...
+      if m.top.numCurrentRows = m.Leafs.Count() then
+        m.Leafs = sorted(m.Leafs,"order")
+        for each item in m.Leafs
+          print "adding row" + item.title
+          if m.top.contentcache.hasfield(m.top.numRowsReceived.tostr()) then m.top.numRowsReceived++
+          contentAA = {}
+          contentAA[m.top.numRowsReceived.toStr()] = item
+          m.top.contentCache.addFields(contentAA)
+        end for
+        
+        'Clear the cache array
+        m.Leafs.Clear()
+      end if
     end if
+  end if
+end sub
+
+' Callback function for when content has finished parsing
+sub updateContent()
+  print "UriHandler.brs - [updateContent]"
+  if m.top.contentSet return
+  if m.top.numRows - 1 = m.top.numRowsReceived
+    print "pass 1"
+    parent = createObject("roSGNode", "ContentNode")
+    for i = (m.top.numRows - m.top.numCurrentRows) to m.top.numRowsReceived
+      parent.appendchild(m.top.contentCache.getField(i.toStr()))
+    end for
+    print "All content has finished loading"
+    m.top.contentSet = true
+    m.top.categorycontent = parent
+    m.top.deeplink = parent
+    itemToCache = {}
+    itemToCache[m.top.category] = parent
+    AddAndSetFields(m.top.cache, itemToCache)
+  else
+    print "Not all content has finished loading yet"
   end if
 end sub
 
@@ -262,7 +305,6 @@ sub parseResponse(job as object)
         contentRow = CreateObject("roSGNode","ContentNode")
         
         'Create a category node for each category'
-        
         m.catcount = 0
         for each category in categories
           if category.getname() = "banner_ad"
@@ -275,7 +317,7 @@ sub parseResponse(job as object)
               end if
               
             contentNode = CreateObject("roSGNode","ContentNode")
-            print "category: " + category@title + " | " + category@description
+            'print "category: " + category@title + " | " + category@description
             aa = {}
             aa.title = category@title
             aa.description = category@description
@@ -284,16 +326,15 @@ sub parseResponse(job as object)
             aa.sdPosterUrl = category@sd_img
             aa.hdposterurl = category@hd_img
             m.count = 0
-
-            'TODO: You could try sorting these category leaves this way            
+     
             categoryLeaves = category.getChildElements()
-            'categoryLeaves = sorted(categoryLeaves, "description")
-            
             for each leaf in categoryLeaves
+              print "leaf: " + leaf@title + " | " + leaf@description
               sleep(100)
               subAA = {}
               subAA.title = leaf@title
               subAA.url = leaf@feed
+              subAA.order = leaf@order
               a = {}
               a[subAA.title] = subAA
               AddAndSetFields(contentNode, a)
@@ -302,8 +343,6 @@ sub parseResponse(job as object)
             AddAndSetFields(contentNode,{count: m.count})
             AddAndSetFields(contentNode, aa)
             contentRow.appendChild(contentNode)
-            
-            
           end if
         end for
         contentRoot.appendChild(contentRow)
@@ -316,34 +355,11 @@ sub parseResponse(job as object)
 end sub
 
 
-' Callback function for when content has finished parsing
-sub updateContent()
-  print "UriHandler.brs - [updateContent]"
-  if m.top.contentSet return
-  if m.top.numRows - 1 = m.top.numRowsReceived
-    parent = createObject("roSGNode", "ContentNode")
-    for i = (m.top.numRows - m.top.numCurrentRows) to m.top.numRowsReceived
-      parent.appendchild(m.top.contentCache.getField(i.toStr()))
-    end for
-    print "All content has finished loading"
-    m.top.contentSet = true
-    m.top.categorycontent = parent
-    m.top.deeplink = parent
-    itemToCache = {}
-    itemToCache[m.top.category] = parent
-    AddAndSetFields(m.top.cache, itemToCache)
-  else
-    print "Not all content has finished loading yet"
-  end if
-end sub
-
-
 function sorted(arr as Object, keyName as String):
     if getInterface(arr, "ifArray") = invalid then STOP
     dict = { }
     for each item in arr:
-    print "Tesing key" + item@description
-        key = item@description : if key = invalid then key = ""
+        key = item[keyName] : if key = invalid then key = ""
         val = dict[key] 
         if val = invalid then dict[key] = [item] else val.push(item)
     end for

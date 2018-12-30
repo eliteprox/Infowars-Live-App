@@ -20,7 +20,7 @@ sub init()
 
   m.UriHandler  = createObject("roSGNode","UriHandler")
   url = "http://ecsmedia.orgfree.com/InfowarsLive/xml/categories.xml"
-  makeRequest({}, url, "GET", 0, "")
+  makeRequest({}, url, "GET", 0, "", "")
   m.UriHandler.observeField("content","onContentSet")
   m.UriHandler.observeField("categorycontent","onCategoryContentSet")
   m.RegistryTask.observeField("result","onReadFinished")
@@ -44,7 +44,8 @@ sub onRowItemSelected(event as object)
         aa = node.getfield(field)
         url = aa.url
         title = aa.title
-        makeRequest({}, url, "GET", 1, title)
+        order = aa.order
+        makeRequest({}, url, "GET", 1, title, order)
       end if
     end if
   end for
@@ -122,6 +123,7 @@ sub onContentSet(event as object)
           return
       end if
       
+      
       m.UriHandler.category = node.title
       m.UriHandler.contentSet = false
       if m.UriHandler.cache.hasField(m.UriHandler.category)
@@ -136,7 +138,9 @@ sub onContentSet(event as object)
             aa = node.getfield(field)
             url = aa.url
             title = aa.title
-            makeRequest({}, url, "GET", 1, title)
+            order = aa.order
+            'A duplicate of onRowItemSelected
+            makeRequest({}, url, "GET", 1, title, order)
             if input.contentID <> invalid
                 m.UriHandler.observeField("deeplink","LoadDeepLink")
             end if
@@ -229,7 +233,7 @@ sub onCategoryContentSet(event as object)
   m.CRow.setFocus(true)
 end sub
 
-sub makeRequest(headers as object, url as String, method as String, num as Integer, title as String)
+sub makeRequest(headers as object, url as String, method as String, num as Integer, title as String, order as String)
   print "[makeRequest] - " + url
   context = createObject("roSGNode", "Node")
   params = {
@@ -240,6 +244,7 @@ sub makeRequest(headers as object, url as String, method as String, num as Integ
   context.addFields({
     parameters: params,
     title: title,
+    order: order
     num: num,
     response: {}
   })

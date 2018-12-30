@@ -26,6 +26,7 @@
     <field id="contentSet" type="boolean"/>
     <!-- Caching content removes redundant url requests -->
     <field id="ContentCache" type="node"/>
+    
     <field id="Cache"        type="node"/>
     <!-- Field to store category tag for the current content item -->
     <field id="Category"     type="string"/>
