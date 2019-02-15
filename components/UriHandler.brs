@@ -353,7 +353,7 @@ end sub
 
 
 function sorted(arr as Object, keyName as String):
-    if getInterface(arr, "ifArray") = invalid then STOP
+    'if getInterface(arr, "ifArray") = invalid then STOP
     dict = { }
     for each item in arr:
         key = item[keyName] : if key = invalid then key = ""
