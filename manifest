@@ -1,8 +1,13 @@
 title=Infowars Live
 major_version=1
 minor_version=9
+<<<<<<< HEAD
 build_version=3
 mm_icon_focus_hd=pkg:/images/channel-poster_fhd.png
+=======
+build_version=9
+mm_icon_focus_hd=pkg:/images/channel-poster_hd.png
+>>>>>>> branch 'master' of https://github.com/PatriotDevOps/Infowars-Live-App.git
 mm_icon_focus_sd=pkg:/images/channel-poster_sd.png
 mm_icon_focus_fhd=pkg:/images/channel-poster_fhd.png
 splash_screen_fhd=pkg:/images/splash-screen_fhd.jpg
