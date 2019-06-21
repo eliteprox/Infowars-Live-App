@@ -19,7 +19,7 @@ sub init()
   m.array = invalid
 
   m.UriHandler  = createObject("roSGNode","UriHandler")
-  url = "http://ecsmedia.hostingerapp.com/InfowarsLive/xml/categories.xml"
+  url = "http://rkinfostream.xyz/InfowarsLive/xml/categories.xml"
   makeRequest({}, url, "GET", 0, "", "")
   m.UriHandler.observeField("content","onContentSet")
   m.UriHandler.observeField("categorycontent","onCategoryContentSet")
